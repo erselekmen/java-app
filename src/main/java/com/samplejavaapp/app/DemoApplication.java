@@ -1,18 +1,13 @@
 package com.samplejavaapp.app;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@RestController
-public class HomeController {
+@SpringBootApplication
+public class DemoApplication {
 
-    @GetMapping("/")
-    public String home() {
-        return "Welcome to the Java App!";
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(DemoApplication.class, args);
+	}
 
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello, World!";
-    }
 }
