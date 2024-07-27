@@ -61,5 +61,4 @@ jobs:
       - name: Deploy to EKS
         run: |
           kubectl set image deployment/java-app java-app=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          kubectl apply -f k8s/nlb-service.yaml
-          kubectl apply -f k8s/ingress.yaml
+          kubectl apply -f k8s/
