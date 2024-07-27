@@ -50,13 +50,29 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-          aws-region: ${{env.AWS_REGION}}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Update kubeconfig
         run: |
-          aws eks update-kubeconfig --name ${{EKS_CLUSTER}} --region ${{env.AWS_REGION}}
+          aws eks update-kubeconfig --name ${{ env.EKS_CLSUTER }} --region ${{ env.AWS_REGION }}
+
+      - name: Deploy NLB Service
+        run: |
+          kubectl apply -f k8s/nlb-service.yaml
+          echo "nlb-service manifest deployed, waiting for nlb to be provisioned..."
+          sleep 60  
+
+      - name: Get NLB DNS Name
+        id: nlb
+        run: |
+          NLB_DNS_NAME=$(kubectl get svc java-app-service -n dev -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          echo "NLB_DNS_NAME=${NLB_DNS_NAME}" >> $GITHUB_ENV
+
+      - name: Update Ingress Manifest
+        run: |
+          sed -i "s/<NLB-DNS-NAME>/${{ env.NLB_DNS_NAME }}/g" k8s/ingress.yaml
 
       - name: Deploy to EKS
         run: |
