@@ -78,6 +78,7 @@ jobs:
         run: |
           NLB_DNS_NAME=$(kubectl get svc java-app-service -n dev -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
           echo "NLB_DNS_NAME=${NLB_DNS_NAME}" >> $GITHUB_ENV
+          echo "Load Balancer DNS Name: $NLB_DNS_NAME"
 
       - name: Update Ingress Manifest
         run: |
@@ -91,3 +92,4 @@ jobs:
         run: |
           kubectl apply -f k8s/
           kubectl set image deployment/java-app java-app-img=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} -n dev
+
