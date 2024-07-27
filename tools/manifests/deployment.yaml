@@ -18,9 +18,4 @@ spec:
         image: 729691315449.dkr.ecr.eu-central-1.amazonaws.com/java-app-img:latest
         ports:
         - containerPort: 8080
-        env:
-          - name: JAVA_OPTS
-            valueFrom:
-              secretKeyRef:
-                name: java-app-secret
-                key: java_opts
+
