@@ -63,9 +63,6 @@ jobs:
         run: |
           aws eks update-kubeconfig --name ${{ env.EKS_CLUSTER }} --region ${{ env.AWS_REGION }}
 
-      - name: Create dev namespace
-        run: |
-          kubectl create namespace dev
 
       - name: Deploy NLB Service
         run: |
