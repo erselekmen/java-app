@@ -86,5 +86,5 @@ jobs:
       - name: Deploy Remaining Manifests to EKS
         run: |
           kubectl apply -f k8s/
-          kubectl set image deployment/java-app java-app=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} -n dev
+          kubectl set image deployment/java-app java-app-img=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} -n dev
 
