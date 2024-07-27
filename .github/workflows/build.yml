@@ -83,7 +83,8 @@ jobs:
         run: |
           kubectl apply -f k8s/deployment.yaml
 
-      - name: Deploy remaining mainfests to EKS
+      - name: Deploy Remaining Manifests to EKS
         run: |
-          kubectl set image deployment/java-app java-app=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           kubectl apply -f k8s/
+          kubectl set image deployment/java-app java-app=${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }} -n dev
+
