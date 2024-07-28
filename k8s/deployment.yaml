@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-app
+  namespace: dev
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: java-app
+  template:
+    metadata:
+      labels:
+        app: java-app
+    spec:
+      containers:
+      - name: java-app-img
+        image: 729691315449.dkr.ecr.eu-central-1.amazonaws.com/java-app-img:latest
+        ports:
+        - containerPort: 8080
+
