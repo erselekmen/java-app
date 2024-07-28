@@ -3,7 +3,7 @@ name: Java App Build & Deployment Pipeline to AWS EKS
 on:
   push:
     branches:
-      - kubespray
+      - eks
 
 env:
   AWS_REGION: eu-central-1
