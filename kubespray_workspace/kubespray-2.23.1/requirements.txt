@@ -1,0 +1,9 @@
+ansible
+cryptography
+jinja2
+jmespath
+MarkupSafe
+netaddr
+pbr
+ruamel.yaml
+ruamel.yaml.clib

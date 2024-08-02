@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"aws-iam","Source":"./modules/iam","Dir":"modules/iam"},{"Key":"aws-nlb","Source":"./modules/nlb","Dir":"modules/nlb"},{"Key":"aws-vpc","Source":"./modules/vpc","Dir":"modules/vpc"}]}

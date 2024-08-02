@@ -1,0 +1,31 @@
+[all]
+ip-10-250-199-209.eu-central-1.compute.internal ansible_host=10.250.199.209
+ip-10-250-192-108.eu-central-1.compute.internal ansible_host=10.250.192.108
+ip-10-250-219-35.eu-central-1.compute.internal ansible_host=10.250.219.35
+
+[bastion]
+bastion ansible_host=3.70.53.159
+
+[all:vars]
+ansible_ssh_user=admin
+ansible_ssh_private_key_file=/Users/ersel.ekmen/Downloads/aws-java-app-keys.pem
+
+[kube_control_plane]
+ip-10-250-199-209.eu-central-1.compute.internal
+
+[kube_node]
+ip-10-250-192-108.eu-central-1.compute.internal
+ip-10-250-219-35.eu-central-1.compute.internal
+
+[etcd]
+ip-10-250-199-209.eu-central-1.compute.internal
+
+[calico_rr]
+
+[k8s_cluster:children]
+kube_node
+kube_control_plane
+calico_rr
+
+[k8s_cluster:vars]
+apiserver_loadbalancer_domain_name="kubernetes-nlb-java-app-ac31c66387704ff9.elb.eu-central-1.amazonaws.com"
