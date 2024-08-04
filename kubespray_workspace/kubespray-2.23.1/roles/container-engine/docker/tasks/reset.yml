@@ -32,15 +32,17 @@
   when: docker_packages_list | length>0
 
 - name: Docker | Stop docker service
-  service:
+  systemd:
     name: "{{ item }}"
-    enabled: false
     state: stopped
   loop:
     - docker
     - docker.socket
     - containerd
-  when: docker_packages_list | length>0
+  register: result
+  failed_when: result.failed and '"Could not find the requested service" not in result.msg'
+  become: true
+
 
 - name: Docker | Remove dpkg hold
   dpkg_selections:
