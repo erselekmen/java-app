@@ -147,11 +147,34 @@
     - kube_network_plugin == 'calico'
     - not ignore_assert_errors
 
-- name: Add Amazon Linux 2 Kubernetes repo
-  command: amazon-linux-extras install -y kubernetes
+- name: Remove existing Kubernetes repo for Amazon Linux 2
+  file:
+    path: /etc/yum.repos.d/kubernetes.repo
+    state: absent
   when: ansible_distribution == "Amazon"
 
-- name: Install Kubernetes packages on Amazon Linux 2
+- name: Add Kubernetes community-owned yum repo for Amazon Linux 2
+  copy:
+    content: |
+      [kubernetes]
+      name=Kubernetes
+      baseurl=https://pkgs.k8s.io/core:/stable:/v1.28/rpm/
+      enabled=1
+      gpgcheck=1
+      gpgkey=https://pkgs.k8s.io/core:/stable:/v1.28/rpm/repodata/repomd.xml.key
+      exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
+    dest: /etc/yum.repos.d/kubernetes.repo
+  when: ansible_distribution == "Amazon"
+
+- name: Clean up yum cache
+  command: yum clean all
+  when: ansible_distribution == "Amazon"
+
+- name: Make cache
+  command: yum makecache
+  when: ansible_distribution == "Amazon"
+
+- name: Install Kubernetes packages on Amazon Linux 2 via yum
   yum:
     name:
       - kubelet
@@ -159,3 +182,45 @@
       - kubectl
     state: present
   when: ansible_distribution == "Amazon"
+
+- name: Create keyrings directory if not exists
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+  when: ansible_distribution == "Debian"
+
+- name: Download public signing key for Kubernetes packages
+  shell: curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+  when: ansible_distribution == "Debian"
+
+- name: Add Kubernetes community-owned apt repo
+  shell: echo "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.28/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+  when: ansible_distribution == "Debian"
+
+- name: Replace the apt repository definition for Debian
+  lineinfile:
+    path: /etc/apt/sources.list
+    regexp: '^deb http://deb.debian.org/debian buster-backports main$'
+    line: 'deb http://cdn-aws.archive.debian.org/debian buster main'
+    state: present
+  when: ansible_distribution == "Debian"
+
+- name: Add additional repositories for Debian
+  lineinfile:
+    path: /etc/apt/sources.list.d/official-repos.list
+    create: yes
+    line: "{{ item }}"
+  with_items:
+    - 'deb http://cdn-aws.archive.debian.org/debian buster main'
+    - 'deb-src http://cdn-aws.archive.debian.org/debian buster main'
+    - 'deb http://security.debian.org/debian-security buster/updates main'
+    - 'deb-src http://security.debian.org/debian-security buster/updates main'
+    - 'deb http://cdn-aws.archive.debian.org/debian buster-updates main'
+    - 'deb-src http://cdn-aws.archive.debian.org/debian buster-updates main'
+  when: ansible_distribution == "Debian"
+
+- name: Update apt package index
+  apt:
+    update_cache: yes
+  when: ansible_distribution == "Debian"
