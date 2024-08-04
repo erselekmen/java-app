@@ -18,7 +18,7 @@
   block:
     - name: Add Debian Backports apt repo
       apt_repository:
-        repo: "deb http://deb.debian.org/debian {{ ansible_distribution_release }}-backports main"
+        repo: "deb http://archive.debian.org/debian {{ ansible_distribution_release }}-backports main"
         state: present
         filename: debian-backports
 
@@ -31,6 +31,11 @@
         dest: "/etc/apt/preferences.d/libseccomp2"
         owner: "root"
         mode: 0644
+
+- name: Install packages requirements
+  apt:
+    name: python3-apt
+    state: present
 
 - name: Update package management cache (APT)
   apt:
