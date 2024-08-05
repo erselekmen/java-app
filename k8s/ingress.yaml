@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: java-app-ingress
-  namespace: dev
+  namespace: java-app
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
@@ -11,13 +11,13 @@ metadata:
     alb.ingress.kubernetes.io/target-type: ip
 spec:
   rules:
-  - host: <NLB-DNS-NAME>
+  - host: kubernetes-nlb-java-app-ac31c66387704ff9.elb.eu-central-1.amazonaws.com
     http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: java-app-service
+            name: java-app-kubespray-service
             port:
-              number: 80
+              number: 9001
