@@ -20,4 +20,4 @@ spec:
           service:
             name: java-app-kubespray-service
             port:
-              number: 6443
+              number: 8080

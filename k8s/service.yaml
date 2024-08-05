@@ -7,6 +7,6 @@ spec:
     app: java-app-kubespray
   ports:
     - protocol: TCP
-      port: 9001
+      port: 8080
       targetPort: 9001
   type: ClusterIP

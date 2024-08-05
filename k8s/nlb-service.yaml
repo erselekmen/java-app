@@ -11,6 +11,6 @@ spec:
     app: java-app-kubespray
   ports:
     - protocol: TCP
-      port: 80
+      port: 8080
       targetPort: 9001
   type: LoadBalancer
