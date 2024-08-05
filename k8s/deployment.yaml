@@ -20,4 +20,3 @@ spec:
         - containerPort: 9001
       imagePullSecrets:
         - name: ecr-registry-secret
-
