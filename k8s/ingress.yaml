@@ -20,4 +20,4 @@ spec:
           service:
             name: java-app-kubespray-service
             port:
-              number: 9001
+              number: 6443
