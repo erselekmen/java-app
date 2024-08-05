@@ -2,16 +2,11 @@ apiVersion: v1
 kind: Service
 metadata:
   name: java-app-kubespray-service
-  namespace: java-app
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-type: external
-    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
-    service.beta.kubernetes.io/aws-load-balancer-arn: arn:aws:elasticloadbalancing:eu-central-1:729691315449:loadbalancer/net/kubernetes-nlb-java-app/ac31c66387704ff9
 spec:
   selector:
     app: java-app-kubespray
   ports:
     - protocol: TCP
-      port: 6443
+      port: 9001
       targetPort: 9001
-  type: LoadBalancer
+  type: ClusterIP
